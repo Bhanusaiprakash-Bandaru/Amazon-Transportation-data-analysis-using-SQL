@@ -1,5 +1,36 @@
 # Amazon-Transportation-data-analysis
+## Project Overview
 
+This project focuses on analyzing an Amazon-like order transportation and logistics system using SQL.
+The objective is to evaluate order fulfillment performance, delivery efficiency, carrier reliability, shipping methods, and regional behavior through structured relational data.
+
+The project is designed around operational analytics, not sales analytics, and reflects real-world logistics scenarios such as delayed deliveries, order cancellations, and carrier performance variation.
+
+## Database Schema
+
+The database consists of four relational tables:
+
+### Customers
+Stores customer details and region information.
+
+### Orders
+Acts as the central table that tracks the order lifecycle, shipping method, and order status.
+
+### Transportation
+Contains shipment-related details including carrier assignment, delivery date, and shipping cost.
+
+### Carriers
+Stores logistics carrier information along with their operational regions.
+
+## Relationship Overview
+
+One customer can place multiple orders
+
+Each order has one transportation record
+
+Each transportation record is handled by one carrier
+
+This relational structure enables end-to-end tracking from order placement to delivery execution.
 ## Project Summary:
 
 1. **Built and Analyzed a Dataset of 200+ Records:** Created and managed a relational database with over 200 rows of data across four tables (`Orders`, `Transportation`, `Carriers`, and `Customers`), using SQL to simulate Amazon's order transportation system.
