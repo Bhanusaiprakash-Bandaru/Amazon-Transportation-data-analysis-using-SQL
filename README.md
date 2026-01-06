@@ -386,5 +386,9 @@ By applying relational database design, joins, aggregations, and conditional log
 
 The insights derived from this project can support data-driven decision-making in logistics optimization and operational planning.
 
+## Author
+Sai B  
+Aspiring Data Analyst | SQL
+
 ---
 
