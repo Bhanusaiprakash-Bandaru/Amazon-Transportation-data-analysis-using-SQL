@@ -1,17 +1,18 @@
-# Amazon-Transportation-data-analysis
+SQL Analysis Questions and Explanations
 
-## Project Summary:
+This section documents the analytical questions addressed in the project and explains how each SQL query contributes to understanding order transportation performance.
 
-1. **Built and Analyzed a Dataset of 200+ Records:** Created and managed a relational database with over 200 rows of data across four tables (`Orders`, `Transportation`, `Carriers`, and `Customers`), using SQL to simulate Amazon's order transportation system.
+Data Validation and Initial Exploration
+SELECT * FROM Orders;
+SELECT * FROM Transportation;
+SELECT * FROM Carriers;
+SELECT * FROM Customers;
 
-2. **Delivered Key Insights Across 10+ Metrics:** Executed 15+ complex SQL queries to evaluate delivery timeliness, regional performance, carrier reliability, and shipping method efficiency, identifying a 15% delay rate and high cancellation rates in specific regions.
 
-3. **Enhanced Logistics Optimization:** Pinpointed performance drops and bottlenecks in the transportation process, recommending improvements based on quantitative insights that could potentially reduce delays by up to 20%.
+Purpose
+These queries are used to verify data availability, structure, and consistency across all tables before performing analysis. This step ensures that joins and aggregations operate on complete and valid datasets.
 
----
-
-### **1. Order Status Distribution**
-```sql
+1. Order Status Distribution
 SELECT 
     Status, 
     COUNT(*) AS TotalOrders
@@ -19,13 +20,15 @@ FROM
     Orders
 GROUP BY 
     Status;
-```
-- **Purpose**: Understand the distribution of orders by status (e.g., Delivered, Processing, Cancelled).
 
----
 
-### **2. Average Delivery Time by Carrier**
-```sql
+Analysis Objective
+To understand how orders are distributed across different lifecycle stages such as Delivered, Processing, Shipped, and Cancelled.
+
+Why this works
+Grouping by Status provides a high-level operational snapshot. This forms the baseline for identifying cancellation volume and delivery success rates.
+
+2. Average Delivery Time by Carrier
 SELECT 
     t.CarrierID, 
     c.CarrierName, 
@@ -40,13 +43,20 @@ WHERE
     t.DeliveryDate IS NOT NULL
 GROUP BY 
     t.CarrierID, c.CarrierName;
-```
-- **Purpose**: Measure the performance of carriers based on average delivery times.
 
----
 
-### **3. Orders Delivered Late**
-```sql
+Analysis Objective
+To evaluate carrier performance based on average delivery duration.
+
+Why this logic is correct
+
+DATEDIFF measures actual delivery time from order placement to delivery.
+
+Orders without delivery dates are excluded to avoid skewed averages.
+
+Grouping by carrier isolates individual carrier performance.
+
+3. Orders Delivered Late
 SELECT 
     o.OrderID, 
     o.OrderDate, 
@@ -57,14 +67,17 @@ FROM
 JOIN 
     Transportation t ON o.OrderID = t.OrderID
 WHERE 
-    t.DeliveryDate IS NOT NULL AND DATEDIFF(t.DeliveryDate, o.OrderDate) > 5;
-```
-- **Purpose**: Identify orders delivered after 5 days, indicating potential delays.
+    t.DeliveryDate IS NOT NULL 
+    AND DATEDIFF(t.DeliveryDate, o.OrderDate) > 5;
 
----
 
-### **4. Regional Order Distribution**
-```sql
+Analysis Objective
+To identify delayed orders using a delivery threshold of more than five days.
+
+Business Interpretation
+Orders exceeding this threshold indicate logistics inefficiencies or carrier delays.
+
+4. Regional Order Distribution
 SELECT 
     c.Region, 
     COUNT(*) AS TotalOrders
@@ -76,13 +89,15 @@ GROUP BY
     c.Region
 ORDER BY 
     TotalOrders DESC;
-```
-- **Purpose**: Track the number of orders in each region and identify high-demand areas.
 
----
 
-### **5. Cancelled Orders by Region**
-```sql
+Analysis Objective
+To identify regions with the highest order volume.
+
+Why this matters
+High-demand regions require stronger logistics support and optimized carrier allocation.
+
+5. Cancelled Orders by Region
 SELECT 
     c.Region, 
     COUNT(*) AS CancelledOrders
@@ -96,13 +111,15 @@ GROUP BY
     c.Region
 ORDER BY 
     CancelledOrders DESC;
-```
-- **Purpose**: Identify regions with the highest number of canceled orders.
 
----
 
-### **6. Popular Shipping Methods**
-```sql
+Analysis Objective
+To detect regions with higher cancellation frequency.
+
+Business Interpretation
+High cancellations may indicate delivery delays, carrier issues, or customer dissatisfaction in those regions.
+
+6. Popular Shipping Methods
 SELECT 
     ShippingMethod, 
     COUNT(*) AS TotalOrders
@@ -112,13 +129,15 @@ GROUP BY
     ShippingMethod
 ORDER BY 
     TotalOrders DESC;
-```
-- **Purpose**: Determine which shipping methods are most frequently chosen by customers.
 
----
 
-### **7. Cost Efficiency of Carriers**
-```sql
+Analysis Objective
+To understand customer preference for shipping methods.
+
+Why this matters
+Helps assess demand for Standard, Expedited, and Same-day delivery options.
+
+7. Cost Efficiency of Carriers
 SELECT 
     t.CarrierID, 
     c.CarrierName, 
@@ -131,13 +150,15 @@ GROUP BY
     t.CarrierID, c.CarrierName
 ORDER BY 
     AvgShippingCost ASC;
-```
-- **Purpose**: Evaluate carriers based on their average shipping costs.
 
----
 
-### **8. High-Performing Carriers**
-```sql
+Analysis Objective
+To evaluate carriers based on average shipping cost.
+
+Business Interpretation
+Identifies cost-efficient carriers and supports cost-performance trade-off decisions.
+
+8. High-Performing Carriers
 SELECT 
     t.CarrierID, 
     c.CarrierName, 
@@ -154,16 +175,20 @@ GROUP BY
     t.CarrierID, c.CarrierName
 ORDER BY 
     DeliveredOrders DESC;
-```
-- **Purpose**: Identify carriers with the highest number of successfully delivered orders.
 
----
 
-### **9. Delays by Shipping Method**
-```sql
+Analysis Objective
+To identify carriers with the highest successful delivery count.
+
+Why this matters
+Highlights reliable carriers contributing most to order completion.
+
+9. Delays by Shipping Method
 SELECT 
     o.ShippingMethod, 
-    COUNT(CASE WHEN DATEDIFF(t.DeliveryDate, o.OrderDate) > 5 THEN 1 END) AS DelayedOrders
+    COUNT(CASE 
+        WHEN DATEDIFF(t.DeliveryDate, o.OrderDate) > 5 THEN 1 
+    END) AS DelayedOrders
 FROM 
     Orders o
 JOIN 
@@ -172,13 +197,15 @@ WHERE
     t.DeliveryDate IS NOT NULL
 GROUP BY 
     o.ShippingMethod;
-```
-- **Purpose**: Track delays based on the shipping method used.
 
----
 
-### **10. Top Customers by Orders**
-```sql
+Analysis Objective
+To evaluate which shipping methods are more prone to delays.
+
+Business Interpretation
+Helps assess whether premium shipping methods consistently meet delivery expectations.
+
+10. Top Customers by Order Volume
 SELECT 
     c.CustomerID, 
     c.Name, 
@@ -192,13 +219,15 @@ GROUP BY
 ORDER BY 
     TotalOrders DESC
 LIMIT 10;
-```
-- **Purpose**: Identify the top 10 customers with the most orders.
 
----
 
-### **11. Total Shipping Cost by Region**
-```sql
+Analysis Objective
+To identify high-frequency customers.
+
+Why this matters
+Supports customer segmentation and prioritization strategies.
+
+11. Total Shipping Cost by Region
 SELECT 
     c.Region, 
     SUM(t.ShippingCost) AS TotalShippingCost
@@ -212,13 +241,12 @@ GROUP BY
     c.Region
 ORDER BY 
     TotalShippingCost DESC;
-```
-- **Purpose**: Evaluate regions with the highest shipping costs.
 
----
 
-### **12. Daily Order Trends**
-```sql
+Analysis Objective
+To evaluate regional contribution to overall shipping expenses.
+
+12. Daily Order Trends
 SELECT 
     DATE(o.OrderDate) AS OrderDate, 
     COUNT(*) AS TotalOrders
@@ -228,26 +256,21 @@ GROUP BY
     DATE(o.OrderDate)
 ORDER BY 
     OrderDate ASC;
-```
-- **Purpose**: Track the trend of orders over time and identify peak days.
-
----
 
 
-### Tracking the performance drop of orders
-**involves analyzing trends and identifying areas where logistics or operations may have faltered.**
-**We’ll focus on  canceled orders, delayed deliveries, and changes in overall order statuses over time. Here’s how we can analyze this:**
+Analysis Objective
+To track order volume trends over time and identify peak periods.
 
----
+Performance Drop Analysis
 
-### **1. Trend in Order Status Over Time**
-This query tracks the number of canceled, delayed, and delivered orders on a daily basis.
+This section focuses on identifying operational degradation through trends in cancellations and delivery delays.
 
-```sql
+1. Trend in Order Status Over Time
 SELECT 
     DATE(o.OrderDate) AS OrderDate, 
     COUNT(CASE WHEN o.Status = 'Cancelled' THEN 1 END) AS CancelledOrders,
-    COUNT(CASE WHEN t.DeliveryDate IS NOT NULL AND DATEDIFF(t.DeliveryDate, o.OrderDate) > 5 THEN 1 END) AS DelayedOrders,
+    COUNT(CASE WHEN t.DeliveryDate IS NOT NULL 
+        AND DATEDIFF(t.DeliveryDate, o.OrderDate) > 5 THEN 1 END) AS DelayedOrders,
     COUNT(CASE WHEN o.Status = 'Delivered' THEN 1 END) AS DeliveredOrders
 FROM 
     Orders o
@@ -257,19 +280,17 @@ GROUP BY
     DATE(o.OrderDate)
 ORDER BY 
     OrderDate ASC;
-```
-- **Insight**: This query reveals if the number of canceled or delayed orders is increasing over time, which may point to performance drops.
 
----
 
-### **2. Regional Drop in Performance**
-Identify regions with a worsening trend in delayed and canceled orders.
+Insight
+Tracks operational stability over time and highlights periods of performance decline.
 
-```sql
+2. Regional Drop in Performance
 SELECT 
     c.Region, 
     COUNT(CASE WHEN o.Status = 'Cancelled' THEN 1 END) AS CancelledOrders,
-    COUNT(CASE WHEN t.DeliveryDate IS NOT NULL AND DATEDIFF(t.DeliveryDate, o.OrderDate) > 5 THEN 1 END) AS DelayedOrders,
+    COUNT(CASE WHEN t.DeliveryDate IS NOT NULL 
+        AND DATEDIFF(t.DeliveryDate, o.OrderDate) > 5 THEN 1 END) AS DelayedOrders,
     COUNT(CASE WHEN o.Status = 'Delivered' THEN 1 END) AS DeliveredOrders
 FROM 
     Customers c
@@ -281,20 +302,18 @@ GROUP BY
     c.Region
 ORDER BY 
     CancelledOrders DESC, DelayedOrders DESC;
-```
-- **Insight**: Pinpoints regions with declining delivery performance or high cancellations.
 
----
 
-### **3. Carrier Drop in Performance**
-Evaluate carriers that show a significant increase in delayed deliveries or cancellations.
+Insight
+Identifies regions with declining logistics performance.
 
-```sql
+3. Carrier Drop in Performance
 SELECT 
     t.CarrierID, 
     c.CarrierName,
     COUNT(CASE WHEN o.Status = 'Cancelled' THEN 1 END) AS CancelledOrders,
-    COUNT(CASE WHEN t.DeliveryDate IS NOT NULL AND DATEDIFF(t.DeliveryDate, o.OrderDate) > 5 THEN 1 END) AS DelayedOrders
+    COUNT(CASE WHEN t.DeliveryDate IS NOT NULL 
+        AND DATEDIFF(t.DeliveryDate, o.OrderDate) > 5 THEN 1 END) AS DelayedOrders
 FROM 
     Transportation t
 JOIN 
@@ -305,19 +324,17 @@ GROUP BY
     t.CarrierID, c.CarrierName
 ORDER BY 
     CancelledOrders DESC, DelayedOrders DESC;
-```
-- **Insight**: Identifies carriers contributing to performance drops and allows you to focus improvement efforts.
 
----
 
-### **4. Shipping Method Performance**
-Determine which shipping methods are leading to higher delays or cancellations.
+Insight
+Highlights carriers contributing to performance degradation.
 
-```sql
+4. Shipping Method Performance
 SELECT 
     o.ShippingMethod, 
     COUNT(CASE WHEN o.Status = 'Cancelled' THEN 1 END) AS CancelledOrders,
-    COUNT(CASE WHEN t.DeliveryDate IS NOT NULL AND DATEDIFF(t.DeliveryDate, o.OrderDate) > 5 THEN 1 END) AS DelayedOrders,
+    COUNT(CASE WHEN t.DeliveryDate IS NOT NULL 
+        AND DATEDIFF(t.DeliveryDate, o.OrderDate) > 5 THEN 1 END) AS DelayedOrders,
     COUNT(CASE WHEN o.Status = 'Delivered' THEN 1 END) AS DeliveredOrders
 FROM 
     Orders o
@@ -327,24 +344,21 @@ GROUP BY
     o.ShippingMethod
 ORDER BY 
     CancelledOrders DESC, DelayedOrders DESC;
-```
-- **Insight**: Pinpoints shipping methods that may be leading to order delays or cancellations.
 
----
 
-### **5. Overall Performance Drop**
-Analyze the percentage of delayed or canceled orders relative to total orders.
+Insight
+Compares shipping methods across cancellations, delays, and successful deliveries.
 
-```sql
+5. Overall Performance Metrics
 SELECT 
     COUNT(CASE WHEN o.Status = 'Cancelled' THEN 1 END) * 100.0 / COUNT(*) AS CancelledPercentage,
-    COUNT(CASE WHEN t.DeliveryDate IS NOT NULL AND DATEDIFF(t.DeliveryDate, o.OrderDate) > 5 THEN 1 END) * 100.0 / COUNT(*) AS DelayedPercentage
+    COUNT(CASE WHEN t.DeliveryDate IS NOT NULL 
+        AND DATEDIFF(t.DeliveryDate, o.OrderDate) > 5 THEN 1 END) * 100.0 / COUNT(*) AS DelayedPercentage
 FROM 
     Orders o
 LEFT JOIN 
     Transportation t ON o.OrderID = t.OrderID;
-```
-- **Insight**: Provides overall metrics to assess the extent of performance drops.
 
----
 
+Insight
+Provides normalized performance indicators to assess overall operational health.
