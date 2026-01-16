@@ -6,7 +6,7 @@
 ![Queries](https://img.shields.io/badge/SQL%20Queries-15%2B-brightgreen)
 ![Status](https://img.shields.io/badge/Status-Completed-brightgreen)
 
-# Amazon-Transportation-data-analysis
+# Amazon Transportation & Logistics Analysis (SQL)
 ## Project Overview
 
 This project focuses on analyzing an Amazon-like order transportation and logistics system using SQL.
