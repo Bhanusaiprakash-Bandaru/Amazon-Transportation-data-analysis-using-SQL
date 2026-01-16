@@ -1,3 +1,11 @@
+![SQL](https://img.shields.io/badge/SQL-Data%20Analysis-blue)
+![Database](https://img.shields.io/badge/Database-Relational-lightgrey)
+![Analytics](https://img.shields.io/badge/Analytics-Operational-success)
+![Domain](https://img.shields.io/badge/Domain-Logistics%20%26%20Transportation-orange)
+![Records](https://img.shields.io/badge/Dataset-200%2B%20Records-yellow)
+![Queries](https://img.shields.io/badge/SQL%20Queries-15%2B-brightgreen)
+![Status](https://img.shields.io/badge/Status-Completed-brightgreen)
+
 # Amazon-Transportation-data-analysis
 ## Project Overview
 
