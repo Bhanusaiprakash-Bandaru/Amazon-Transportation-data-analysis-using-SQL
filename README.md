@@ -42,7 +42,7 @@ This relational structure enables end-to-end tracking from order placement to de
 
 ## Project Summary:
 
-1. **Built and Analyzed a Dataset of 200+ Records:** Created and managed a relational database with over 200 rows of data across four tables (`Orders`, `Transportation`, `Carriers`, and `Customers`), using SQL to simulate Amazon's order transportation system.
+1. **Built and Analyzed a Dataset :** Created and managed a relational database with over 200 rows of data across four tables (`Orders`, `Transportation`, `Carriers`, and `Customers`), using SQL to simulate Amazon's order transportation system.
 
 2. **Delivered Key Insights Across 10+ Metrics:** Executed 15+ complex SQL queries to evaluate delivery timeliness, regional performance, carrier reliability, and shipping method efficiency, identifying a 15% delay rate and high cancellation rates in specific regions.
 
@@ -391,6 +391,8 @@ LEFT JOIN
 
 This project demonstrates the practical use of SQL for analyzing real-world logistics and transportation workflows.
 By applying relational database design, joins, aggregations, and conditional logic, the analysis identifies delivery inefficiencies, regional bottlenecks, and carrier performance variations.
+Identified key operational issues such as delivery delays and high cancellation regions.
+Suggested improvements in carrier performance and shipping methods based on analysis.
 
 The insights derived from this project can support data-driven decision-making in logistics optimization and operational planning.
 
