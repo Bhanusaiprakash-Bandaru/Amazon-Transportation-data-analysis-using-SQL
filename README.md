@@ -396,7 +396,7 @@ The insights derived from this project can support data-driven decision-making i
 
 ## Author
 Sai B  
-Aspiring Data Analyst | SQL
+Aspiring Data Scientist | SQL
 
 ---
 
